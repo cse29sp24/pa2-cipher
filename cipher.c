@@ -44,6 +44,10 @@ int mmi(int key1)
     return -1;
 }
 
+/**
+ * Check if key1 is valid (coprime with 26).
+ * Returns 1 if the key is valid, 0 if not.
+ */
 int valid_key1(int key1)
 {
     static const int possible_values_a[] = {1, 3, 5, 7, 9, 11, 15, 17, 19, 21, 23, 25};
@@ -55,12 +59,34 @@ int valid_key1(int key1)
     return 0;
 }
 
+/**
+ * encrypts a character using the affine cipher
+ * (only encrypts lower case letters, other characters are skipped)
+ * 
+ * parameters:
+ *  char c      the character to encrypt
+ *  int key1    the first key (non-negative, coprime with 26)
+ *  int key2    the second key (non-negative)
+ * returns
+ *  the encrypted char (or original character if not lower case letter)
+ */
 char affine_encrypt(char c, int key1, int key2)
 {
     /* TODO: implement this function. */
     return c;
 }
 
+/**
+ * decrypts a character using the affine cipher
+ * (only decrypts lower case letters, other characters are skipped)
+ * 
+ * parameters:
+ *  char c      the character to decrypt
+ *  int key1    the first key (non-negative, coprime with 26)
+ *  int key2    the second key (non-negative)
+ * returns
+ *  the decrypted char (or original character if not lower case letter)
+ */ 
 char affine_decrypt(char c, int key1, int key2)
 {
     /* TODO: implement this function. */
@@ -81,6 +107,7 @@ int main(int argc, char *argv[])
     int mode = ENCRYPT_MODE;
     char *endptr;
 
+    /* Handle command line arguments. */
     if (argc < 3) {
         print_usage();
     }
@@ -100,17 +127,24 @@ int main(int argc, char *argv[])
         }
     }
 
+    /* Parse remaining arguments as key1 and key2 */
     key1 = strtol(argv[optind++], &endptr, 10);
     key2 = strtol(argv[optind++], &endptr, 10);
 
-    /* TODO: If in decrypt mode, check key1 is valid for decryption. */
+    /* TODO: Check key1 is valid using the valid_key1() function. */
 
+    /* Read input on a loop until EOF */
     int len;
     while (fgets(buf, sizeof(buf), stdin)) {
-        len = strlen(buf) - 1;
+        len = strlen(buf);
+
+        // Double check length does not exceed buffer size.
+        // This is done for security reasons.
         assert(len <= MAX_INPUT_SIZE);
-        if (buf[len] == '\n') {
-            buf[len] = 0;
+
+        // strip the trailing newline character if present.
+        if (buf[len - 1] == '\n') {
+            buf[--len] = 0;
         }
 
         /* TODO: Encrypt/decrypt the text in buffer in-place. */
